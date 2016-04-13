@@ -9,5 +9,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.villanova.tkenned8.here.MainActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Map"
+        android:id="@+id/mapButton"
+        android:visibility="visible"
+        android:layout_marginTop="45dp"
+        android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Search"
+        android:id="@+id/locationSearchButton"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
