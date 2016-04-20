@@ -3,26 +3,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.villanova.tkenned8.here.MainActivity">
 
-    <Button
+    tools:context="edu.villanova.tkenned8.here.MainActivity"
+    android:background="#D0EAF2">
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open Map"
-        android:id="@+id/mapButton"
-        android:visibility="visible"
-        android:layout_marginTop="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="CHOOSE ONE"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:id="@+id/textViewChooseOne" />
+
+    <Switch
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:textOn="ARRIVING"
+        android:textOff="PICKING UP"
+        android:id="@+id/switch_Arrive_Pickup"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONTACTS"
+        android:textSize="40sp"
+        android:textColor="#000000"
+        android:textStyle=""
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:id="@+id/textViewContacts" />
+
+    <View style="@style/Divider"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="195dp"
+        />
+
+    <SearchView
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchContacts"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="210dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="36dp"
+        android:background="#FFFFFF"
+        android:text="Search"/>
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/contactList"
+        android:layout_width="290dp"
+        android:layout_height="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="36dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="65dip"
+        android:background="#41BEE8"
+        android:layout_alignParentBottom="true"
+        ></LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open Search"
-        android:id="@+id/locationSearchButton"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:text="NEXT"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:id="@+id/nextButton" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/gearButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_menu_preferences"
+        android:background="@color/colorPrimary"/>
+
+
 </RelativeLayout>
