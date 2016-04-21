@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
 
     tools:context="edu.villanova.tkenned8.here.MainActivity"
-    android:background="#D0EAF2">
+    android:background="#D0EAF2"
+    android:id="@+id/mainActivity_layout">
 
 
     <TextView
