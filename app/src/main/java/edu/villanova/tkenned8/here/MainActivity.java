@@ -30,5 +30,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent2, 1);
             }
         });
+        Button settingsButton = (Button) findViewById(R.id.settingsButton);
+        assert settingsButton != null;
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivityForResult(intent2, 1);
+            }
+        });
     }
 }
