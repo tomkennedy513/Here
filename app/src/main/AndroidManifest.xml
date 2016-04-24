@@ -41,6 +41,7 @@
         </activity>
         <activity android:name=".locationSearchActivity">
         </activity>
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

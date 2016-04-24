@@ -25,6 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationManager locationManager;
     LatLng destination = null;
+    LatLng currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng currentLocation = getCurrentLocation();
+        getCurrentLocation();
+        Log.d("MyApp:","Reached mapReadyfunction, current location = ");
         if(currentLocation != null){
+            Log.d("MyApp:","Reached current location clause");
             googleMap.addMarker(new MarkerOptions().position(currentLocation));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         }
@@ -72,7 +75,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-
     }
 
     @Override
@@ -85,17 +87,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.removeUpdates(this);
     }
 
-    public LatLng getCurrentLocation() {
+    public void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return null;
+            Log.d("MyApp:","Reached inside getCurrentLocation permissions clause");
+            return;
         }
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null){
             double lat = location.getLatitude();
             double lon = location.getLongitude();
-            return new LatLng(lat,lon);
+            currentLocation = new LatLng(lat,lon);
+            Log.d("MyApp:","Reached getLocation location not null clause");
         }
-        return null;
     }
 
     @Override

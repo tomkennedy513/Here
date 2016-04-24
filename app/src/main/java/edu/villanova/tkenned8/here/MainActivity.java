@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -43,20 +44,18 @@ public class MainActivity extends AppCompatActivity {
         //Keeps keyboard below search bar
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        //Set up search bar for contacts
-        setupSearchView();
-
-
-        /*
-        Button addPinButton = (Button) findViewById(R.id.gearButton);
+        ImageButton addPinButton = (ImageButton) findViewById(R.id.gearButton);
         assert addPinButton != null;
         addPinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(MainActivity.this, locationSearchActivity.class);
+                Intent intent2 = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivityForResult(intent2, 1);
             }
-        });*/
+        });
+
+        //Set up search bar for contacts
+        setupSearchView();
     }
 
     private void setupSearchView() {
