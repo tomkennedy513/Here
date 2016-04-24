@@ -25,7 +25,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationManager locationManager;
     LatLng destination = null;
-    LatLng currentLocation;
+    double Lat = 0.00;
+    double Lon = 0.00;
+
     GoogleMap mMap;
 
     @Override
@@ -51,17 +53,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        Lat = location.getLatitude();
+        Lon = location.getLongitude();
+
     }
 
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLng currentLocation = new LatLng(Lat,Lon);
         mMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        }
-
         Log.d("MyApp:","Reached mapReadyfunction, current location = ");
         if(currentLocation != null){
             Log.d("MyApp:","Reached current location clause");
