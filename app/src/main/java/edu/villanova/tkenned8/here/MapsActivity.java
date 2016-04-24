@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     LocationManager locationManager;
-    LatLng destination;
+    LatLng destination = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             googleMap.addMarker(new MarkerOptions().position(currentLocation));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         }
-        googleMap.addMarker(new MarkerOptions().position(destination));
-
+        if(destination != null) {
+            googleMap.addMarker(new MarkerOptions().position(destination));
+        }
     }
 
     @Override
