@@ -21,11 +21,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     LocationManager locationManager;
     LatLng destination = null;
     LatLng currentLocation;
+    GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,53 +42,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, 1);
             }
         });
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
     }
 
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LocationListener listener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-                currentLocation = new LatLng(lat, lon);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
+        mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         Log.d("MyApp:","Reached mapReadyfunction, current location = ");
         if(currentLocation != null){
             Log.d("MyApp:","Reached current location clause");
-            googleMap.addMarker(new MarkerOptions().position(currentLocation));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            mMap.addMarker(new MarkerOptions().position(currentLocation));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         }
         if(destination != null) {
-            googleMap.addMarker(new MarkerOptions().position(destination));
+            mMap.addMarker(new MarkerOptions().position(destination));
         }
     }
 
@@ -111,4 +93,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location
+                .getLongitude())));
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
