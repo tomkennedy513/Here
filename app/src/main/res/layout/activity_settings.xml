@@ -66,8 +66,8 @@
                 android:scaleY="1.5"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="40dp"
-                android:text="1 minute"
-                android:onClick="onCheckboxClicked"/>
+                android:text="1 minute"/>
+
             <CheckBox android:id="@+id/check_five"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,8 +76,8 @@
                 android:scaleY="1.5"
                 android:layout_marginLeft="34dp"
                 android:layout_marginTop="80dp"
-                android:text="5 minutes"
-                android:onClick="onCheckboxClicked"/>
+                android:text="5 minutes"/>
+
             <CheckBox android:id="@+id/check_ten"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,8 +87,8 @@
                 android:layout_marginLeft="36dp"
                 android:layout_marginTop="120dp"
                 android:layout_marginBottom="5dp"
-                android:text="10 minutes"
-                android:onClick="onCheckboxClicked"/>
+                android:text="10 minutes"/>
+
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="fill_parent"
