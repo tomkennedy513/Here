@@ -1,5 +1,6 @@
 package edu.villanova.tkenned8.here;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,8 +25,13 @@ public class locationSearchActivity extends AppCompatActivity {
             public void onPlaceSelected(Place place) {
                 Log.i(TAG, "Place: " + place.getName());
                 newLatLng = place.getLatLng();
-
-
+                Intent returnLocation = new Intent();
+                double latitude = newLatLng.latitude;
+                double longitude = newLatLng.longitude;
+                returnLocation.putExtra("latitude", latitude);
+                returnLocation.putExtra("longitude", longitude);
+                setResult(RESULT_OK, returnLocation);
+                finish();
             }
 
             @Override
