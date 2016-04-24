@@ -1,3 +1,12 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.villanova.tkenned8.here.MapsActivity">
+
+
+
 <fragment android:id="@+id/map"
           android:name="com.google.android.gms.maps.SupportMapFragment"
           xmlns:android="http://schemas.android.com/apk/res/android"
@@ -6,3 +15,11 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           tools:context="edu.villanova.tkenned8.here.MapsActivity"/>
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageButton"
+        android:background="@drawable/search"
+        android:layout_alignParentEnd="true"/>
+</RelativeLayout>
