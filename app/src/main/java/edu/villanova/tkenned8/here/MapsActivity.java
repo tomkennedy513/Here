@@ -25,8 +25,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     LocationManager locationManager;
     LatLng destination = null;
-    double Lat = 0.00;
-    double Lon = 0.00;
+    double Lat;
+    double Lon;
 
     GoogleMap mMap;
 
@@ -44,34 +44,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, 1);
             }
         });
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        Lat = location.getLatitude();
-        Lon = location.getLongitude();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
     }
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng currentLocation = new LatLng(Lat,Lon);
         mMap = googleMap;
-        Log.d("MyApp:","Reached mapReadyfunction, current location = ");
-        if(currentLocation != null){
-            Log.d("MyApp:","Reached current location clause");
-            mMap.addMarker(new MarkerOptions().position(currentLocation));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-        if(destination != null) {
-            mMap.addMarker(new MarkerOptions().position(destination));
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location != null) {
+            Lat = location.getLatitude();
+            Lon = location.getLongitude();
+            mMap.addMarker(new MarkerOptions().position(new LatLng(Lat,Lon)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Lat, Lon)));
         }
     }
 
@@ -84,8 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 Double latitude = data.getDoubleExtra("latitude", 0.00);
                 Double longitude = data.getDoubleExtra("longitude", 0.00);
-
+                mMap.clear();
                 destination = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(destination));
             } else {
                 Log.i("MyActivity", "Result not ok");
             }
@@ -99,6 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location
                 .getLongitude())));
+
     }
 
     @Override
