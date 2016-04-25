@@ -12,7 +12,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +44,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, locationSearchActivity.class);
                 startActivityForResult(intent, 1);
+            }
+        });
+        Button startButton = (Button) findViewById(R.id.startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(destination != null){
+
+                }
+                else {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Please set a destination before continuing!";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
             }
         });
 
@@ -85,6 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 destination = new LatLng(latitude, longitude);
                 mMap.addMarker(new MarkerOptions().position(destination));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             } else {
                 Log.i("MyActivity", "Result not ok");
             }
@@ -96,8 +116,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),location
-                .getLongitude())));
 
     }
 
