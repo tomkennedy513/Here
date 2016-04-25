@@ -17,6 +17,19 @@ public class SettingsActivity extends AppCompatActivity {
         CheckBox c1 = (CheckBox) findViewById(R.id.check_one);
         CheckBox c5 = (CheckBox) findViewById(R.id.check_five);
         CheckBox c10 = (CheckBox) findViewById(R.id.check_ten);
+        
+        if(c1.isChecked())
+        {
+
+        }
+        else if (c5.isChecked())
+        {
+
+        }
+        else if (c10.isChecked())
+        {
+
+        }
 
 
 
