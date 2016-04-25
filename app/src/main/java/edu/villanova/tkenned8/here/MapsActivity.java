@@ -3,18 +3,15 @@ package edu.villanova.tkenned8.here;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -47,28 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivityForResult(intent, 1);
             }
         });
-        ImageButton startButton = (ImageButton) findViewById(R.id.startButton);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    //Retrieve previous intent information
-                    Intent intent = getIntent();
-                    String contactName = intent.getStringExtra("contactName");
-                    String phoneNumber = intent.getStringExtra("phoneNumber");
 
-                    Context context = getApplicationContext();
-                    CharSequence text = "Please set a destination before continuing!";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-
-                    Intent service = new Intent(MapsActivity.this, locationNotifcations.class);
-                    service.putExtra("contactName",contactName);
-                    service.putExtra("phoneNumber",phoneNumber);
-
-                    startService(service);
-            }
-        });
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -114,9 +90,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Retrieve previous intent information
+                        Intent intent = getIntent();
+                        String contactName = intent.getStringExtra("contactName");
+                        String phoneNumber = intent.getStringExtra("phoneNumber");
 
+                        Context context = getApplicationContext();
+                        CharSequence text = "Please set a destination before continuing!";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+
+                        Intent service = new Intent(MapsActivity.this, locationNotifcations.class);
+                        service.putExtra("contactName",contactName);
+                        service.putExtra("phoneNumber",phoneNumber);
+
+                        startService(service);
                     }
                 });
+
             } else {
                 Log.i("MyActivity", "Result not ok");
             }
