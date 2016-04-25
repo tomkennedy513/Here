@@ -1,13 +1,17 @@
 package edu.villanova.tkenned8.here;
 
 import android.Manifest;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -28,8 +32,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng destination = null;
     double Lat;
     double Lon;
-
     GoogleMap mMap;
+    boolean isBound = false;
+    private Service service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        ImageButton startButton = (ImageButton) findViewById(R.id.startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Retrieve previous intent information
+                Intent intent = getIntent();
+                String contactName = intent.getStringExtra("contactName");
+                String phoneNumber = intent.getStringExtra("phoneNumber");
+
+                Context context = getApplicationContext();
+                CharSequence text = "Have a safe trip";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+                Intent service = new Intent(MapsActivity.this, locationNotifications.class);
+                service.putExtra("contactName",contactName);
+                service.putExtra("phoneNumber",phoneNumber);
+
+                Log.d("MyApp","Got to startButton");
+
+
+                bindService(service, con, Context.BIND_AUTO_CREATE);
+                startService(service);
+            }
+        });
     }
 
 
@@ -86,28 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.addMarker(new MarkerOptions().position(destination));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                ImageButton startButton = (ImageButton) findViewById(R.id.startButton);
-                startButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Retrieve previous intent information
-                        Intent intent = getIntent();
-                        String contactName = intent.getStringExtra("contactName");
-                        String phoneNumber = intent.getStringExtra("phoneNumber");
-
-                        Context context = getApplicationContext();
-                        CharSequence text = "Please set a destination before continuing!";
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
-
-                        Intent service = new Intent(MapsActivity.this, locationNotifcations.class);
-                        service.putExtra("contactName",contactName);
-                        service.putExtra("phoneNumber",phoneNumber);
-
-                        startService(service);
-                    }
-                });
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
 
             } else {
                 Log.i("MyActivity", "Result not ok");
@@ -136,5 +147,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    private ServiceConnection con = new ServiceConnection()
+    {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder ibind) {
+            service= ((locationNotifications.MyBinder)ibind).getService();
+            isBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            service = null;
+            isBound = false;
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("MyApp", "onResume() triggered");
+        if (isBound) {
+            unbindService(con);
+        }
     }
 }

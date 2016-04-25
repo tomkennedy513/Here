@@ -8,11 +8,12 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 /**
  * Created by wildcat on 4/24/2016.
  */
-public class locationNotifcations extends Service{
+public class locationNotifications extends Service{
     SmsManager mgr = null;
     private final IBinder binder = new MyBinder();
 
@@ -20,6 +21,7 @@ public class locationNotifcations extends Service{
     public void onCreate() {
         super.onCreate();
         mgr = SmsManager.getDefault();
+        Log.d("MyApp","Got to onCreate in service");
 
     }
 
@@ -35,12 +37,14 @@ public class locationNotifcations extends Service{
         sharedPreferences.getBoolean("five");
         sharedPreferences.getBoolean("ten");*/
 
+        Log.d("MyApp","Got to onStartCommand in service");
+
         return START_STICKY;
     }
 
     public class MyBinder extends Binder {
         //return an instance of the service
-        locationNotifcations getService() {return locationNotifcations.this;}
+        locationNotifications getService() {return locationNotifications.this;}
     }
 
     @Override
