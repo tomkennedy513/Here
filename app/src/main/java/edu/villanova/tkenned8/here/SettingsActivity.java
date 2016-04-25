@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("ten", c10.isChecked());
-                editor.commit();;
+                editor.commit();
             }
         });
 

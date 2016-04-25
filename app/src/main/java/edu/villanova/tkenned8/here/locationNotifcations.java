@@ -2,9 +2,11 @@ package edu.villanova.tkenned8.here;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 
 /**
@@ -25,8 +27,13 @@ public class locationNotifcations extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        //languageReceive =(String) intent.getExtras().get("receiveLanguage");
-        //languageSend = (String) intent.getExtras().get("sendLanguage");
+        /*
+        //get Settings from Shared Preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        sharedPreferences.getString("text","TextNotification");
+        sharedPreferences.getBoolean("one",);
+        sharedPreferences.getBoolean("five");
+        sharedPreferences.getBoolean("ten");*/
 
         return START_STICKY;
     }
