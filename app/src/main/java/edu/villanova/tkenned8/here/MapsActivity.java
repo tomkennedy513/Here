@@ -69,6 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = getIntent();
                 String contactName = intent.getStringExtra("contactName");
                 String phoneNumber = intent.getStringExtra("phoneNumber");
+                String destinationType = intent.getStringExtra("destinationType");
 
                 Context context = getApplicationContext();
                 CharSequence text = "Have a safe trip";
@@ -79,16 +80,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent service = new Intent(MapsActivity.this, locationNotifications.class);
                 service.putExtra("contactName",contactName);
                 service.putExtra("phoneNumber",phoneNumber);
+                service.putExtra("destinationType",destinationType);
 
                 Log.d("MyApp","Got to startButton");
 
-
-                bindService(service, con, Context.BIND_AUTO_CREATE);
                 startService(service);
+                bindService(service, con, Context.BIND_AUTO_CREATE);
+
             }
         });
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -102,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Lat = location.getLatitude();
             Lon = location.getLongitude();
             mMap.addMarker(new MarkerOptions().position(new LatLng(Lat,Lon)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Lat, Lon)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Lat,Lon)));
         }
     }
 
@@ -127,7 +128,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("MyActivity", "no result code");
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {

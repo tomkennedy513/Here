@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity {
 
                     //Find value of slider whether picking up or arriving
                     Switch s = (Switch) findViewById(R.id.switch_Arrive_Pickup);
-                    int destinationType;
+                    String destinationType;
                     if (s.isChecked())
                     {
-                        destinationType = 1; //1 for arriving
+                        destinationType = "arriving"; //1 for arriving
                     }
                     else {
-                        destinationType = 0; //0 for picking up
+                        destinationType = "pickingUp"; //0 for picking up
                     }
 
                     //Find contact to pass to next activity
