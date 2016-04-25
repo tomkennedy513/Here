@@ -92,12 +92,23 @@
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="fill_parent"
+            android:id="@+id/bottomBar"
             android:layout_height="55dp"
             android:orientation="horizontal"
             android:background="#41BEE6"
             android:gravity="center_vertical"
             android:layout_alignParentBottom="true"></android.support.v7.widget.LinearLayoutCompat>
-
+<!--
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/bottomBar"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:background="@color/colorPrimary"
+            android:text="SAVE"
+            android:id="@+id/save"/>
+-->
     </RelativeLayout>
 
 </LinearLayout>
