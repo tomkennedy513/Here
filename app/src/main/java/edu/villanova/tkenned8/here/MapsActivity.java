@@ -71,12 +71,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String phoneNumber = intent.getStringExtra("phoneNumber");
                 String destinationType = intent.getStringExtra("destinationType");
 
+                //Set up toast message
                 Context context = getApplicationContext();
                 CharSequence text = "Have a safe trip";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
 
+                //Start service with passed information from previous activity
                 Intent service = new Intent(MapsActivity.this, locationNotifications.class);
                 service.putExtra("contactName",contactName);
                 service.putExtra("phoneNumber",phoneNumber);
@@ -84,8 +86,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Log.d("MyApp","Got to startButton");
 
-                startService(service);
                 bindService(service, con, Context.BIND_AUTO_CREATE);
+                startService(service);
+
 
             }
         });

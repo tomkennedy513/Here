@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //Keeps keyboard below search bar
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
+        //Gear Button set up
         ImageButton addPinButton = (ImageButton) findViewById(R.id.gearButton);
         assert addPinButton != null;
         addPinButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setupSearchView();
     }
 
+    //Integrates searchview and contacts
     private void setupSearchView() {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) findViewById(R.id.searchContacts);
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchableInfo);
     }
 
+    //display Name from Contact
     private String getDisplayNameForContact(Intent intent) {
         Cursor phoneCursor = getContentResolver().query(intent.getData(), null, null, null, null);
         phoneCursor.moveToFirst();
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
             SearchView searchView = (SearchView) findViewById(R.id.searchContacts);
             searchView.setQuery("",false);
-            searchView.clearFocus();
+            searchView.clearFocus(); //clears search after click
 
             //Add textview when select contact
             RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.mainActivity_layout);

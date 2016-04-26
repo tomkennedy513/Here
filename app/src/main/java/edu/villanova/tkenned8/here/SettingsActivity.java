@@ -35,10 +35,6 @@ public class SettingsActivity extends AppCompatActivity {
         settingsCustom.setTypeface(myCustomFont);
         messageCustom.setTypeface(myCustomFont);
         destinationCustom.setTypeface(myCustomFont);
-        //message.setTypeface(myCustomFont);
-        //c1.setTypeface(myCustomFont);
-        //c5.setTypeface(myCustomFont);
-        //c10.setTypeface(myCustomFont);
 
         //Adding the Shared Preferences to the text box and check boxes
         message.setText(settings.getString("text", ""));
