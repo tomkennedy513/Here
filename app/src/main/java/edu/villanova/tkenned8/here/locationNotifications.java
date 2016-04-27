@@ -28,7 +28,6 @@ public class locationNotifications extends Service {
     String contactName;
     String phoneNumber;
     String destinationType;
-    LatLng destinationCoord;
     LocationListener listener;
     Location destination;
     @Override
@@ -49,10 +48,10 @@ public class locationNotifications extends Service {
         phoneNumber = intent.getStringExtra("phoneNumber");
         destinationType = intent.getStringExtra("destinationType");
         Bundle bundle = intent.getParcelableExtra("destination");
-        destinationCoord = bundle.getParcelable("destination");
+        LatLng destinationCoord = bundle.getParcelable("destination");
         assert destinationCoord != null;
         double lat = destinationCoord.latitude;
-        double lon =destinationCoord.longitude;
+        double lon = destinationCoord.longitude;
         destination.setLatitude(lat);
         destination.setLongitude(lon);
 
