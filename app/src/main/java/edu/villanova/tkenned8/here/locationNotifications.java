@@ -53,13 +53,12 @@ public class locationNotifications extends Service {
         contactName = intent.getStringExtra("contactName");
         phoneNumber = intent.getStringExtra("phoneNumber");
         destinationType = intent.getStringExtra("destinationType");
-        Bundle bundle = intent.getParcelableExtra("destination");
-        LatLng destinationCoord = bundle.getParcelable("destination");
+        //Bundle bundle = intent.getParcelableExtra("destination");
+        //LatLng destinationCoord = bundle.getParcelable("destination");
+        //assert destinationCoord != null;
 
-        assert destinationCoord != null;
-        Log.i("Location", "destinationCoord: " + destinationCoord.toString());
-        double lat = destinationCoord.latitude;
-        double lon = destinationCoord.longitude;
+        double lat = intent.getDoubleExtra("destinationLat", 0.00);
+        double lon = intent.getDoubleExtra("destinationLon", 0.00);
         destination.setLatitude(lat);
         destination.setLongitude(lon);
         Log.i("Location", "destination:  " + destination.toString());
