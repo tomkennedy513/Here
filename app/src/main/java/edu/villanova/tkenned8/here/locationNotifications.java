@@ -16,12 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by wildcat on 4/24/2016.
- */
 public class locationNotifications extends Service {
     SmsManager mgr = null;
     private final IBinder binder = new MyBinder();
