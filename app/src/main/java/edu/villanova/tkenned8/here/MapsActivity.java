@@ -124,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Double longitude = data.getDoubleExtra("longitude", 0.00);
                 mMap.clear();
                 destination = new LatLng(latitude, longitude);
+                Log.i("MyApp", "destination before intent: " + destination.toString());
                 mMap.addMarker(new MarkerOptions().position(destination));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(destination));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
