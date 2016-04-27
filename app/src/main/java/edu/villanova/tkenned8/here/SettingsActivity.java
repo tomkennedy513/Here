@@ -32,14 +32,21 @@ public class SettingsActivity extends AppCompatActivity {
         TextView messageCustom = (TextView) findViewById(R.id.enterMessageText);
         TextView destinationCustom = (TextView) findViewById(R.id.changeDistanceText);
         Typeface myCustomFont = Typeface.createFromAsset(getAssets(),"fonts/basictitlefont.ttf");
+        assert settingsCustom != null;
         settingsCustom.setTypeface(myCustomFont);
+        assert messageCustom != null;
         messageCustom.setTypeface(myCustomFont);
+        assert destinationCustom != null;
         destinationCustom.setTypeface(myCustomFont);
 
         //Adding the Shared Preferences to the text box and check boxes
+        assert message != null;
         message.setText(settings.getString("text", ""));
+        assert c1 != null;
         c1.setChecked(settings.getBoolean("one", false));
+        assert c5 != null;
         c5.setChecked(settings.getBoolean("five", false));
+        assert c10 != null;
         c10.setChecked(settings.getBoolean("ten", false));
 
         //Saving the text box when changed
@@ -59,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("text", s.toString());
-                editor.commit();;
+                editor.apply();
             }
         });
 
@@ -71,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("one", c1.isChecked());
-                editor.commit();;
+                editor.apply();
             }
         });
 
@@ -83,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("five", c5.isChecked());
-                editor.commit();;
+                editor.apply();
             }
         });
 
@@ -95,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("ten", c10.isChecked());
-                editor.commit();
+                editor.apply();
             }
         });
 

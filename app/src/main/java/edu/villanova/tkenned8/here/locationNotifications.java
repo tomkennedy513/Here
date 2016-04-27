@@ -17,8 +17,6 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class locationNotifications extends Service {
     SmsManager mgr = null;
     private final IBinder binder = new MyBinder();

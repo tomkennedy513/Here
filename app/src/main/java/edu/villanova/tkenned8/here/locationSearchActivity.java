@@ -22,6 +22,7 @@ public class locationSearchActivity extends AppCompatActivity {
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
+            //returns info about selected destination
             public void onPlaceSelected(Place place) {
                 Log.i(TAG, "Place: " + place.getName());
                 newLatLng = place.getLatLng();

@@ -37,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
         TextView nextCustom = (TextView) findViewById(R.id.nextButton);
         Typeface myCustomFont = Typeface.createFromAsset(getAssets(),"fonts/basictitlefont.ttf");
         Typeface myBarFont = Typeface.createFromAsset(getAssets(),"fonts/Bubblegum.ttf");
+        assert chooseoneCustom != null;
         chooseoneCustom.setTypeface(myCustomFont);
+        assert contactsCustom != null;
         contactsCustom.setTypeface(myCustomFont);
+        assert nextCustom != null;
         nextCustom.setTypeface(myBarFont);
 
         //Keeps keyboard below search bar
@@ -64,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) findViewById(R.id.searchContacts);
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(getComponentName());
+        assert searchView != null;
         searchView.setSearchableInfo(searchableInfo);
     }
 
     //display Name from Contact
     private String getDisplayNameForContact(Intent intent) {
         Cursor phoneCursor = getContentResolver().query(intent.getData(), null, null, null, null);
+        assert phoneCursor != null;
         phoneCursor.moveToFirst();
         int idDisplayName = phoneCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         String name = phoneCursor.getString(idDisplayName);
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             final String displayName = getDisplayNameForContact(intent);
 
             SearchView searchView = (SearchView) findViewById(R.id.searchContacts);
+            assert searchView != null;
             searchView.setQuery("",false);
             searchView.clearFocus(); //clears search after click
 
@@ -99,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             Typeface myChalkFont = Typeface.createFromAsset(getAssets(),"fonts/Bubblegum.ttf");
             tv.setTypeface(myChalkFont);
             tv.setText(displayName);
+            assert relativeLayout != null;
             relativeLayout.addView(tv);
 
             //Add contact book image
@@ -131,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     String[] projection    = new String[] {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                             ContactsContract.CommonDataKinds.Phone.NUMBER};
                     Cursor people = getContentResolver().query(uri, projection, null, null, null);
+                    assert people != null;
                     int indexName = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
                     int indexNumber = people.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
@@ -138,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     String name ="";
                     String phoneNumber = "";
                     //Loop through contacts until find name selected and obtain phone number
-                    while (people.isLast() != true) {
+                    while (!people.isLast()) {
                         name = people.getString(indexName);
                         if (name.equals(displayName)) {
                             phoneNumber = people.getString(indexNumber);
@@ -152,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     //Find value of slider whether picking up or arriving
                     Switch s = (Switch) findViewById(R.id.switch_Arrive_Pickup);
                     String destinationType;
+                    assert s != null;
                     if (s.isChecked())
                     {
                         destinationType = "arriving"; //1 for arriving
@@ -169,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("destinationType",destinationType);
 
                     Log.d("MyApp:","Show destinationType = " + destinationType + " and contactName " + displayName + " phone number = " + phoneNumber);
-
+                    people.close();
                     startActivity(intent);
                 }
             });
