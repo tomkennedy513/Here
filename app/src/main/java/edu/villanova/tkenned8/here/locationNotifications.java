@@ -4,9 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by wildcat on 4/24/2016.
@@ -21,6 +24,7 @@ public class locationNotifications extends Service{
     String contactName;
     String phoneNumber;
     String destinationType;
+    LatLng destination;
 
     @Override
     public void onCreate() {
@@ -40,6 +44,9 @@ public class locationNotifications extends Service{
         contactName = intent.getStringExtra("contactName");
         phoneNumber = intent.getStringExtra("phoneNumber");
         destinationType = intent.getStringExtra("destinationType");
+        Bundle bundle = intent.getExtras();
+        destination = (LatLng) bundle.get("destination");
+
 
         Log.d("MyApp","Contactname = " + contactName + " Phonenumber = " + phoneNumber + " destinationType = " + destinationType);
 
