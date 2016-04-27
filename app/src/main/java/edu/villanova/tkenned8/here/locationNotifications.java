@@ -44,8 +44,8 @@ public class locationNotifications extends Service{
         contactName = intent.getStringExtra("contactName");
         phoneNumber = intent.getStringExtra("phoneNumber");
         destinationType = intent.getStringExtra("destinationType");
-        Bundle bundle = intent.getExtras();
-        destination = (LatLng) bundle.get("destination");
+        Bundle bundle = intent.getParcelableExtra("destination");
+        destination = bundle.getParcelable("destination");
 
 
         Log.d("MyApp","Contactname = " + contactName + " Phonenumber = " + phoneNumber + " destinationType = " + destinationType);
