@@ -55,11 +55,14 @@ public class locationNotifications extends Service {
         destinationType = intent.getStringExtra("destinationType");
         Bundle bundle = intent.getParcelableExtra("destination");
         LatLng destinationCoord = bundle.getParcelable("destination");
+
         assert destinationCoord != null;
+        Log.i("Location", "destinationCoord: " + destinationCoord.toString());
         double lat = destinationCoord.latitude;
         double lon = destinationCoord.longitude;
         destination.setLatitude(lat);
         destination.setLongitude(lon);
+        Log.i("Location", "destination:  " + destination.toString());
 
         Log.d("MyApp", "Contactname = " + contactName + " Phonenumber = " + phoneNumber + " destinationType = " + destinationType);
 
