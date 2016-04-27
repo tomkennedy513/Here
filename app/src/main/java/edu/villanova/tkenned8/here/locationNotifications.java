@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -28,6 +29,8 @@ public class locationNotifications extends Service {
     String contactName;
     String phoneNumber;
     String destinationType;
+    String mPhoneNumber;
+    int countText = 0;
     LocationListener listener;
     Location destination;
     @Override
@@ -43,6 +46,9 @@ public class locationNotifications extends Service {
     //needed to receive intent extras
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        mPhoneNumber = tMgr.getLine1Number();
+
         //Retrieve intent information
         contactName = intent.getStringExtra("contactName");
         phoneNumber = intent.getStringExtra("phoneNumber");
@@ -54,8 +60,6 @@ public class locationNotifications extends Service {
         double lon = destinationCoord.longitude;
         destination.setLatitude(lat);
         destination.setLongitude(lon);
-
-
 
         Log.d("MyApp", "Contactname = " + contactName + " Phonenumber = " + phoneNumber + " destinationType = " + destinationType);
 
@@ -77,7 +81,7 @@ public class locationNotifications extends Service {
             public void onLocationChanged(Location location) {
                 float distanceInMeters= location.distanceTo(destination);
                 float distanceInMiles = (float) (distanceInMeters/1609.344);
-                locationCheck(distanceInMiles);
+                locationCheck(distanceInMiles, distanceInMeters);
             }
 
             @Override
@@ -98,69 +102,139 @@ public class locationNotifications extends Service {
         return START_STICKY;
     }
 
-        public void locationCheck(float distanceInMiles) {
+        public void locationCheck(float distanceInMiles, float distanceInMeters) {
 
             if (message == "") {
                 Log.d("MyApp", "No message to display");
                 if (destinationType.equals("arriving")) {
                     Log.d("MyApp", "reached arrive clause");
-                    mgr.sendTextMessage(phoneNumber, null, contactName + " has left", null, null);
-                    if (tenMile) {
-                        mgr.sendTextMessage(phoneNumber, null, contactName + " is ten miles away from their destination", null, null);
-                    } else if (fiveMile) {
-                        mgr.sendTextMessage(phoneNumber, null, contactName + " is five miles away from their destination", null, null);
-                    } else if (oneMile) {
-                        mgr.sendTextMessage(phoneNumber, null, contactName + " is one mile away from their destination", null, null);
+                    if (countText == 0) {
+                        mgr.sendTextMessage(phoneNumber, null, contactName + " has left", null, null);
+                        countText++;
                     }
-
-                } else {
-                    Log.d("MyApp", "reached pickingUp clause");
-                    mgr.sendTextMessage(phoneNumber, null, "Someone is leaving to pick you up", null, null);
-                    if (tenMile) //& location range is correct
-                    {
-                        mgr.sendTextMessage(phoneNumber, null, "Someone is ten miles away", null, null);
-                    } else if (fiveMile)//& location range is correct
-                    {
-                        mgr.sendTextMessage(phoneNumber, null, "Someone is five miles away", null, null);
-                    } else if (oneMile)//& location range is correct
-                    {
-                        mgr.sendTextMessage(phoneNumber, null, "Someone is one mile away", null, null);
+                    if (tenMile && (distanceInMiles < 10.5) && (distanceInMiles > 9.5)) {
+                        if (countText == 1) {
+                            mgr.sendTextMessage(phoneNumber, null, contactName + " is ten miles away from their destination", null, null);
+                            countText++;
+                        }
+                    } else if (fiveMile && (distanceInMiles < 5.5) && (distanceInMiles > 4.5)) {
+                        if (countText == 1 || (countText == 2 && tenMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, contactName + " is five miles away from their destination", null, null);
+                            countText++;
+                        }
+                    } else if (oneMile && (distanceInMiles < 1.5) && (distanceInMiles > .5)) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, contactName + " is one mile away from their destination", null, null);
+                            countText++;
+                        }
                     }
-                    //else {} //location arrive  mgr.sendTextMessage(phoneNumber,null,contactName + " has arrived", null,null);
-                }
-
-            } else {
-                if (destinationType.equals("arriving")) {
-                    Log.d("MyApp", "reached arrive clause");
-                    mgr.sendTextMessage(phoneNumber, null, message, null, null);
-                    if (tenMile) {
-                        mgr.sendTextMessage(phoneNumber, null, message, null, null);
-                    } else if (fiveMile) {
-                        mgr.sendTextMessage(phoneNumber, null, message, null, null);
-                    } else {
-                        if (oneMile) {
-                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                    else if (distanceInMeters < 200) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile) || (countText == 4 && oneMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, contactName + " has arrived at their destination", null, null);
+                            countText = 0;
+                            stopService(new Intent (locationNotifications.this,MainActivity.class));
                         }
                     }
 
                 } else {
                     Log.d("MyApp", "reached pickingUp clause");
-                    if (tenMile) {
+                    if (countText == 0) {
+                        mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is leaving to pick you up", null, null);
+                        countText++;
+                    }
+                    if (tenMile && (distanceInMiles <= 10))
+                    {
+                        if (countText == 1) {
+                            mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is ten miles away from picking you up", null, null);
+                            countText++;
+                        }
+                    } else if (fiveMile && (distanceInMiles <= 5))//& location range is correct
+                    {
+                        if (countText == 1 || (countText == 2 && tenMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is five miles away from picking you up", null, null);
+                            countText++;
+                        }
+                    } else if (oneMile && (distanceInMiles <= 1))//& location range is correct
+                    {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is one mile away picking you up", null, null);
+                            countText++;
+                        }
+                    }
+                    else if (distanceInMeters < 200) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile) || (countText == 4 && oneMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is here to pick you up", null, null);
+                            countText = 0;
+                            stopService(new Intent (locationNotifications.this,MainActivity.class));
+                        }
+                    }
+                }
+
+            } else {
+                if (destinationType.equals("arriving")) {
+                    Log.d("MyApp", "reached arrive clause");
+                    if (countText == 0) {
                         mgr.sendTextMessage(phoneNumber, null, message, null, null);
-                    } else if (fiveMile) {
+                        countText++;
+                    }
+                    if (tenMile && (distanceInMiles < 10.5) && (distanceInMiles > 9.5)) {
+                        if (countText == 1) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    } else if (fiveMile && (distanceInMiles < 5.5) && (distanceInMiles > 4.5)) {
+                        if (countText == 1 || (countText ==2 && tenMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    }
+                    else if (oneMile && (distanceInMiles < 1.5) && (distanceInMiles > 4.5)) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    }
+                    else if (distanceInMeters < 200) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile) || (countText == 4 && oneMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText = 0;
+                            stopService(new Intent (locationNotifications.this,MainActivity.class));
+                        }
+                    }
+
+
+                } else {
+                    Log.d("MyApp", "reached pickingUp clause");
+                    if (countText == 0) {
                         mgr.sendTextMessage(phoneNumber, null, message, null, null);
-                    } else if (oneMile) {
-                        mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                        countText++;
+                    }
+                    if (tenMile && (distanceInMiles < 10.5) && (distanceInMiles > 9.5)) {
+                        if (countText == 1) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    } else if (fiveMile && (distanceInMiles < 5.5) && distanceInMiles > 4.5) {
+                        if (countText == 1 || (countText == 2 && tenMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    } else if (oneMile && (distanceInMiles < 1.5) && (distanceInMiles > .5)) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText++;
+                        }
+                    }
+                    else if (distanceInMeters < 200) {
+                        if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile) || (countText == 4 && oneMile)) {
+                            mgr.sendTextMessage(phoneNumber, null, message, null, null);
+                            countText = 0;
+                            stopService(new Intent (locationNotifications.this,MainActivity.class));
+                        }
                     }
                 }
             }
         }
-
-
-
-
-
-
 
 
     public class MyBinder extends Binder {
