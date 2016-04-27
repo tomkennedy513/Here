@@ -17,7 +17,7 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class locationNotifications extends Service {
+public class locationNotifications extends Service implements LocationListener {
     SmsManager mgr = null;
     private final IBinder binder = new MyBinder();
     String message;
@@ -28,8 +28,7 @@ public class locationNotifications extends Service {
     String phoneNumber;
     String destinationType;
     String mPhoneNumber;
-    int countText = 0;
-    LocationListener listener;
+    int countText = 0; //counter for the number of text messages
     Location destination;
     @Override
     public void onCreate() {
@@ -51,15 +50,12 @@ public class locationNotifications extends Service {
         contactName = intent.getStringExtra("contactName");
         phoneNumber = intent.getStringExtra("phoneNumber");
         destinationType = intent.getStringExtra("destinationType");
-        //Bundle bundle = intent.getParcelableExtra("destination");
-        //LatLng destinationCoord = bundle.getParcelable("destination");
-        //assert destinationCoord != null;
-
         double lat = intent.getDoubleExtra("destinationLat", 0.00);
         double lon = intent.getDoubleExtra("destinationLon", 0.00);
+        destination = new Location(LocationManager.GPS_PROVIDER);
         destination.setLatitude(lat);
         destination.setLongitude(lon);
-        Log.i("Location", "destination:  " + destination.toString());
+
 
         Log.d("MyApp", "Contactname = " + contactName + " Phonenumber = " + phoneNumber + " destinationType = " + destinationType);
 
@@ -74,34 +70,13 @@ public class locationNotifications extends Service {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, this);
 
-        listener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                float distanceInMeters= location.distanceTo(destination);
-                float distanceInMiles = (float) (distanceInMeters/1609.344);
-                locationCheck(distanceInMiles, distanceInMeters);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
         return START_STICKY;
     }
 
+        /* Logic to determine whether a person has entered a specific message, selected different alert distances, and
+        facilitates the text message at the appropriate distance, countText prevents a text from being sent more than once*/
         public void locationCheck(float distanceInMiles, float distanceInMeters) {
 
             if (message == "") {
@@ -142,19 +117,19 @@ public class locationNotifications extends Service {
                         mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is leaving to pick you up", null, null);
                         countText++;
                     }
-                    if (tenMile && (distanceInMiles <= 10))
+                    if (tenMile && (distanceInMiles < 10.5) && (distanceInMiles > 9.5))
                     {
                         if (countText == 1) {
                             mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is ten miles away from picking you up", null, null);
                             countText++;
                         }
-                    } else if (fiveMile && (distanceInMiles <= 5))//& location range is correct
+                    } else if (fiveMile && (distanceInMiles < 5.5) && (distanceInMiles > 4.5))
                     {
                         if (countText == 1 || (countText == 2 && tenMile)) {
                             mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is five miles away from picking you up", null, null);
                             countText++;
                         }
-                    } else if (oneMile && (distanceInMiles <= 1))//& location range is correct
+                    } else if (oneMile && (distanceInMiles < 1.5) && (distanceInMiles > .5))
                     {
                         if (countText == 1 || (countText == 2 && tenMile) || (countText == 3 && fiveMile)) {
                             mgr.sendTextMessage(phoneNumber, null, mPhoneNumber + " is one mile away picking you up", null, null);
@@ -235,6 +210,28 @@ public class locationNotifications extends Service {
                 }
             }
         }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        float distanceInMeters= location.distanceTo(destination);
+        float distanceInMiles = (float) (distanceInMeters/1609.344);
+        locationCheck(distanceInMiles, distanceInMeters);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 
 
     public class MyBinder extends Binder {

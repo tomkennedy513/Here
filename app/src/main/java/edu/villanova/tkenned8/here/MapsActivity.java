@@ -84,14 +84,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 service.putExtra("contactName",contactName);
                 service.putExtra("phoneNumber",phoneNumber);
                 service.putExtra("destinationType",destinationType);
-                Log.i("MyApp", "destination before intent: " + destination.toString());
+                Log.d("MyApp", "destination before intent: " + destination.toString());
                 service.putExtra("destinationLat", destination.latitude);
                 service.putExtra("destinationLon", destination.longitude);
 
-                //Bundle bundle = new Bundle();
-                //bundle.putParcelable("destination", destination);
-                //service.putExtra("destination", bundle);
-                Log.d("MyApp","Got to startButton");
+                Log.d("MyApp","Got to startButton, lat = " + destination.latitude + " long = " + destination.longitude);
 
                 bindService(service, con, Context.BIND_AUTO_CREATE);
                 startService(service);
